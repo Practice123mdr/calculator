@@ -8,9 +8,6 @@ const buttonDeleteArray = Array.from(buttonDelete);
 const displayScreen = document.getElementById("display-screen");
 const displayScreenArray = Array.from(displayScreen);
 
-let temp;
-let tempOperator;
-let tempResult;
 displayScreen.innerText = "0";
 let firstValue = ["0"];
 let secondValue = ["0"];
@@ -106,6 +103,12 @@ buttonsDigit.forEach((element) =>  {
         }
         if (currentOperator === undefined) {
             firstValue.push(element.value);
+            if (displayScreen.textContent === "0" && typeof(firstValue) === "object") {
+                return displayScreen.textContent = element.value;
+            }
+            if (firstValue.includes(element.value, 0) && typeof(firstValue) === "object") {
+                displayScreen.textContent += element.value;
+            }
         } if (currentOperator != undefined) {
             secondValue.push(element.value);
         } 
@@ -130,7 +133,6 @@ buttonsOperatorArray.forEach((element => {
             equals(firstValue, secondValue, currentOperator);
             currentOperator = element.value;
             secondValue = [];
- 
         } else if (typeof(firstValue) === "number" && typeof(secondValue) === "object") {
             secondValue = secondValue.join("");
             secondValue = parseFloat(secondValue);
