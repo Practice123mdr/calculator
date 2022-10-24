@@ -8,7 +8,6 @@ const buttonDeleteArray = Array.from(buttonDelete);
 const displayScreen = document.getElementById("display-screen");
 const displayScreenArray = Array.from(displayScreen);
 
-let count = 0;
 displayScreen.innerText = "0";
 let firstValue = ["0"];
 let secondValue = ["0"];
@@ -23,7 +22,6 @@ function reset() {
     displayScreen.innerText = "0";
     return;
 }
-
 
 function equals(a, b, ope) {
     if (ope === "+") {
@@ -124,30 +122,48 @@ buttonsDigit.forEach((element) =>  {
 
 buttonsOperatorArray.forEach((element => {
     element.addEventListener("click", () => {
-        if (currentOperator === undefined) {
+        if (element.value === "delete") {
+            if (firstValue.length > 1 && typeof(firstValue) === "object" && secondValue.length === 1 && currentOperator === undefined) {
+                displayScreen.textContent = displayScreen.innerText.slice(0, -1);
+                if (displayScreen.textContent === "") {
+                    firstValue.pop();
+                    return displayScreen.textContent = "0";
+                }
+                return firstValue.pop();
+            } if (currentOperator != undefined && secondValue.length > 1) {
+                displayScreen.textContent = displayScreen.innerText.slice(0, -1);
+                if (displayScreen.textContent === "") {
+                    secondValue.pop();
+                    return displayScreen.textContent = "0";
+                }
+                return secondValue.pop(); 
+            }
+        }
+        if (currentOperator === undefined && element.value != "delete") {
             return currentOperator = element.value;
         }
-        if (element.value === "clear") {
+        if (element.value === "clear" && element.value != "delete") {
             return reset();
         }
-        if (firstValue.length === 0 && secondValue.length === 0 && currentOperator === undefined) {
+        if (firstValue.length === 0 && secondValue.length === 0 && currentOperator === undefined && element.value != "delete") {
             return;
-        } else if (currentOperator != undefined && typeof(firstValue) === "object") {
+        } else if (currentOperator != undefined && typeof(firstValue) === "object" && element.value != "delete") {
             firstValue = firstValue.join("");
             secondValue = secondValue.join("");
             firstValue = parseFloat(firstValue);
             secondValue = parseFloat(secondValue);
             equals(firstValue, secondValue, currentOperator);
-            currentOperator = element.value;
+            currentOperator = result;
             secondValue = [];
-        } else if (typeof(firstValue) === "number" && typeof(secondValue) === "object") {
+            displayScreen.textContent = result;
+        } else if (typeof(firstValue) === "number" && typeof(secondValue) === "object" && element.value != "delete") {
             secondValue = secondValue.join("");
             secondValue = parseFloat(secondValue);
             equals(firstValue, secondValue, currentOperator);
             currentOperator = element.value;
             secondValue = [];
+            
         }
-
     });
 }))
 
