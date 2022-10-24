@@ -8,6 +8,7 @@ const buttonDeleteArray = Array.from(buttonDelete);
 const displayScreen = document.getElementById("display-screen");
 const displayScreenArray = Array.from(displayScreen);
 
+let count = 0;
 displayScreen.innerText = "0";
 let firstValue = ["0"];
 let secondValue = ["0"];
@@ -103,14 +104,20 @@ buttonsDigit.forEach((element) =>  {
         }
         if (currentOperator === undefined) {
             firstValue.push(element.value);
-            if (displayScreen.textContent === "0" && typeof(firstValue) === "object") {
+            if (displayScreen.textContent === "0" && typeof(firstValue) === "object" && secondValue.length < 2) {
                 return displayScreen.textContent = element.value;
             }
-            if (firstValue.includes(element.value, 0) && typeof(firstValue) === "object") {
+            if (firstValue.includes(element.value, 0) && typeof(firstValue) === "object" && secondValue.length < 2) {
                 displayScreen.textContent += element.value;
             }
         } if (currentOperator != undefined) {
             secondValue.push(element.value);
+            if (secondValue.length === 2 && typeof(firstValue) === "object") {
+                return displayScreen.textContent = element.value;
+            }
+            if (secondValue.includes(element.value, 0) && typeof(firstValue) === "object") {
+                displayScreen.textContent += element.value;
+            }
         } 
     });
 });
