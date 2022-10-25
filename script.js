@@ -13,11 +13,13 @@ let firstValue = ["0"];
 let secondValue = ["0"];
 let currentOperator;
 let result = 0;
+let displayToNumber;
 
 function reset() {
     firstValue = ["0"];
     secondValue = ["0"];
     currentOperator = undefined;
+    displayToNumber = undefined;
     result = 0;
     displayScreen.innerText = "0";
     return;
@@ -82,7 +84,9 @@ function equals(a, b, ope) {
             }
             return firstValue = result;
         }
+
     }
+
 }
 
 buttonsDigit.forEach((element) =>  {
@@ -102,6 +106,9 @@ buttonsDigit.forEach((element) =>  {
         }
         if (currentOperator === undefined) {
             firstValue.push(element.value);
+            if (element.value === "." && displayScreen.textContent === "0" && typeof(firstValue) === "object" && secondValue.length < 2 && currentOperator === undefined) {
+                return displayScreen.textContent = "0."
+            }
             if (displayScreen.textContent === "0" && typeof(firstValue) === "object" && secondValue.length < 2) {
                 return displayScreen.textContent = element.value;
             }
@@ -117,11 +124,25 @@ buttonsDigit.forEach((element) =>  {
                 displayScreen.textContent += element.value;
             }
         } 
+
     });
 });
 
 buttonsOperatorArray.forEach((element => {
     element.addEventListener("click", () => {
+        if (element.value === "clear" && element.value != "delete") {
+            return reset();
+        }
+        if (firstValue.length === 1 && currentOperator === undefined) {
+            return;
+        }
+        if (secondValue.length === 0) {
+            if (element.value === "=") {
+                return
+            } else {
+                return currentOperator = element.value
+            }
+        }
         if (element.value === "delete") {
             if (firstValue.length > 1 && typeof(firstValue) === "object" && secondValue.length === 1 && currentOperator === undefined) {
                 displayScreen.textContent = displayScreen.innerText.slice(0, -1);
@@ -142,9 +163,6 @@ buttonsOperatorArray.forEach((element => {
         if (currentOperator === undefined && element.value != "delete") {
             return currentOperator = element.value;
         }
-        if (element.value === "clear" && element.value != "delete") {
-            return reset();
-        }
         if (firstValue.length === 0 && secondValue.length === 0 && currentOperator === undefined && element.value != "delete") {
             return;
         } else if (currentOperator != undefined && typeof(firstValue) === "object" && element.value != "delete") {
@@ -153,16 +171,28 @@ buttonsOperatorArray.forEach((element => {
             firstValue = parseFloat(firstValue);
             secondValue = parseFloat(secondValue);
             equals(firstValue, secondValue, currentOperator);
-            currentOperator = result;
             secondValue = [];
             displayScreen.textContent = result;
+            displayToNumber = +displayScreen.textContent;
+            buttonsDigit.forEach((element) => {
+                element.addEventListener("click", () => {
+                    if (result === displayToNumber) {
+                        if (secondValue.length === 1) {
+                           return displayScreen.textContent = element.value;
+                        } else {
+                            return displayScreen.textContent += element.value;
+                        }
+                    }
+                })
+            })
         } else if (typeof(firstValue) === "number" && typeof(secondValue) === "object" && element.value != "delete") {
             secondValue = secondValue.join("");
             secondValue = parseFloat(secondValue);
             equals(firstValue, secondValue, currentOperator);
             currentOperator = element.value;
-            secondValue = [];
-            
+            secondValue = [];  
+            displayScreen.textContent = result;
+            displayToNumber = +displayScreen.textContent;
         }
     });
 }))
