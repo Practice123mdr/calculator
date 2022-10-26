@@ -84,9 +84,7 @@ function equals(a, b, ope) {
             }
             return firstValue = result;
         }
-
     }
-
 }
 
 buttonsDigit.forEach((element) =>  {
@@ -107,7 +105,7 @@ buttonsDigit.forEach((element) =>  {
         if (currentOperator === undefined) {
             firstValue.push(element.value);
             if (element.value === "." && displayScreen.textContent === "0" && typeof(firstValue) === "object" && secondValue.length < 2 && currentOperator === undefined) {
-                return displayScreen.textContent = "0."
+                return displayScreen.textContent = "0.";
             }
             if (displayScreen.textContent === "0" && typeof(firstValue) === "object" && secondValue.length < 2) {
                 return displayScreen.textContent = element.value;
@@ -117,14 +115,27 @@ buttonsDigit.forEach((element) =>  {
             }
         } if (currentOperator != undefined) {
             secondValue.push(element.value);
+            if (element.value === "." && currentOperator != undefined && result != 0 && secondValue.length === 1 && displayToNumber != displayScreen.textContent) {
+                return displayScreen.textContent = "0.";
+            }
+            if (element.value === "." && currentOperator != undefined && result === 0 && secondValue.length === 2) {
+                return displayScreen.textContent = "0.";
+            }
             if (secondValue.length === 2 && typeof(firstValue) === "object") {
                 return displayScreen.textContent = element.value;
             }
             if (secondValue.includes(element.value, 0) && typeof(firstValue) === "object") {
                 displayScreen.textContent += element.value;
             }
-        } 
-
+        }  
+        if (+displayScreen.textContent === result || result != 0) {
+            if (secondValue.length <= 1) {
+                return displayScreen.textContent = element.value;
+            }
+            if (secondValue.length >= 1) {
+                displayScreen.textContent += element.value;
+            }
+        }
     });
 });
 
@@ -138,9 +149,9 @@ buttonsOperatorArray.forEach((element => {
         }
         if (secondValue.length === 0) {
             if (element.value === "=") {
-                return
+                return;
             } else {
-                return currentOperator = element.value
+                return currentOperator = element.value;
             }
         }
         if (element.value === "delete") {
@@ -158,6 +169,12 @@ buttonsOperatorArray.forEach((element => {
                     return displayScreen.textContent = "0";
                 }
                 return secondValue.pop(); 
+            } if (+displayScreen.textContent === result || result != 0) {
+                displayScreen.textContent = displayScreen.innerText.slice(0, -1);
+                if (displayScreen.textContent === "") {
+                    secondValue.pop();
+                    return displayScreen.textContent = "0";
+                }
             }
         }
         if (currentOperator === undefined && element.value != "delete") {
@@ -173,18 +190,7 @@ buttonsOperatorArray.forEach((element => {
             equals(firstValue, secondValue, currentOperator);
             secondValue = [];
             displayScreen.textContent = result;
-            displayToNumber = +displayScreen.textContent;
-            buttonsDigit.forEach((element) => {
-                element.addEventListener("click", () => {
-                    if (result === displayToNumber) {
-                        if (secondValue.length === 1) {
-                           return displayScreen.textContent = element.value;
-                        } else {
-                            return displayScreen.textContent += element.value;
-                        }
-                    }
-                })
-            })
+            // displayToNumber = +displayScreen.textContent;
         } else if (typeof(firstValue) === "number" && typeof(secondValue) === "object" && element.value != "delete") {
             secondValue = secondValue.join("");
             secondValue = parseFloat(secondValue);
@@ -192,7 +198,7 @@ buttonsOperatorArray.forEach((element => {
             currentOperator = element.value;
             secondValue = [];  
             displayScreen.textContent = result;
-            displayToNumber = +displayScreen.textContent;
+            // displayToNumber = +displayScreen.textContent;
         }
     });
 }))
