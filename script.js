@@ -164,6 +164,12 @@ buttonsDigit.forEach((element) =>  {
 
 buttonsOperatorArray.forEach((element => {
     element.addEventListener("click", () => {
+        if (typeof(firstValue) === "object" && firstValue.length === 1 && element.value === "-") {
+            currentOperator = undefined;
+            firstValue = firstValue.splice(1, 0, "-")
+            displayScreen.textContent = element.value;
+            return firstValue.push(element.value)
+        }
         if (currentOperator === "÷" && typeof(firstValue) === "object" && secondValue.length === 1 || +displayScreen.textContent === 0) {
             reset()
             displayScreen.textContent = ":)";
