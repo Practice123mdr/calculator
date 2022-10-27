@@ -15,11 +15,6 @@ let currentOperator;
 let result = 0;
 let displayToNumber;
 
-function test() {
-    sum = secondValue.reduce((partialSum, a) => partialSum + a, 0);
-    return +sum;
-}
-
 function reset() {
     firstValue = ["0"];
     secondValue = ["0"];
@@ -242,4 +237,3 @@ buttonsOperatorArray.forEach((element => {
         }
     });
 }))
-

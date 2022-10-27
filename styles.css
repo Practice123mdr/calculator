@@ -1,5 +1,5 @@
 html {
-    background-color: #363540;;
+    background-color: #363540;
     width: 100%;
     height: 100%;
     display: flex;
@@ -14,7 +14,7 @@ html {
     height: 60px;
     width: 302px;
     border: none;
-    background: #e3e3e3;
+    background: #ececec;
     font-size: 38px;
     align-items: center;
     font-family:monospace;
@@ -49,8 +49,8 @@ html {
 
 .button-operator {
     font-family:Verdana, Geneva, Tahoma, sans-serif;
-    color: #e3e3e3;
     background-color: #455d7a;
+    color: #e3e3e3;
     font-size: 22px;
     border: none;
     width: 60px;
@@ -61,7 +61,6 @@ html {
 
 .button-operator:active {
     transform: scale(0.98);
-    background-color: #394c64;
 }
 
 #zero {
@@ -73,5 +72,9 @@ html {
 }
 
 #equals, #minus, #plus, #multiply, #divide {
-    
+    background-color: #567A90;
+}
+
+#delete, #button-clear {
+    background-color: #455d7a;;
 }
