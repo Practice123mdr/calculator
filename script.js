@@ -5,8 +5,8 @@ const buttonsDigitArray = Array.from(buttonsDigit);
 const buttonsOperatorArray = Array.from(buttonsOperator);
 const buttonDeleteArray = Array.from(buttonDelete);
 
+const limit = document.getElementsByClassName("limit");
 const displayScreen = document.getElementById("display-screen");
-const displayScreenArray = Array.from(displayScreen);
 
 displayScreen.innerText = "0";
 let firstValue = ["0"];
@@ -14,6 +14,11 @@ let secondValue = ["0"];
 let currentOperator;
 let result = 0;
 let displayToNumber;
+
+function test() {
+    sum = secondValue.reduce((partialSum, a) => partialSum + a, 0);
+    return +sum;
+}
 
 function reset() {
     firstValue = ["0"];
@@ -29,28 +34,28 @@ function equals(a, b, ope) {
     if (ope === "+") {
         console.log(a + b)
         result = a + b;
-        if (isNaN(result) === true) {
+        if (isNaN(result)) {
             return;
         }
         return firstValue = result;
     } else if (ope === "-") {
         console.log(a - b)
         result = a - b;
-        if (isNaN(result) === true) {
+        if (isNaN(result)) {
             return;
         }
         return firstValue = result;
     } else if (ope === "*") {
         console.log(a * b)
         result = a * b;
-        if (isNaN(result) === true) {
+        if (isNaN(result)) {
             return;
         }
         return firstValue = result;
     } else if (ope === "÷") {
         console.log(a / b)
         result = a / b;
-        if (isNaN(result) === true) {
+        if (isNaN(result)) {
             return;
         }
         return firstValue = result;
@@ -58,28 +63,28 @@ function equals(a, b, ope) {
         if (currentOperator = "+") {
             console.log(a + b)
             result = a + b;
-            if (isNaN(result) === true) {
+            if (isNaN(result)) {
                 return;
             }
             return firstValue = result;
         } else if (currentOperator === "-") {
             console.log(a - b)
             result = a - b;
-            if (isNaN(result) === true) {
+            if (isNaN(result)) {
                 return;
             }
             return firstValue = result;
         } else if (currentOperator === "*") {
             console.log(a * b)
             result = a * b;
-            if (isNaN(result) === true) {
+            if (isNaN(result)) {
                 return;
             }
             return firstValue = result;
         } else if (currentOperator === "÷") {
             console.log(a / b)
             result = a / b;
-            if (isNaN(result) === true) {
+            if (isNaN(result)) {
                 return;
             }
             return firstValue = result;
@@ -89,6 +94,23 @@ function equals(a, b, ope) {
 
 buttonsDigit.forEach((element) =>  {
     element.addEventListener("click", () => {
+        for (let i = 0; i < limit.length; i++) {
+            if (limit[i].className == "limit") {
+                limit[i].innerHTML = limit[i].innerHTML.substring(0,14)
+            }
+        }
+        if (displayScreen.textContent === ":)") {
+            reset();
+        }
+        if (element.value === "0" && typeof(firstValue) != "object" && currentOperator != undefined && secondValue.length === 0){
+            return;
+        }
+        if (element.value === "0" && typeof(firstValue) === "object" && currentOperator === undefined && firstValue.length === 1) {
+            return;
+        }
+        if (element.value === "0" && typeof(firstValue) === "object" && currentOperator != undefined && secondValue.length === 1) {
+            return;
+        }
         if (typeof(firstValue) === "object" && currentOperator === undefined) {
             if (element.value === ".") {
                 if (firstValue.includes(".", 0)) {
@@ -103,6 +125,9 @@ buttonsDigit.forEach((element) =>  {
             }
         }
         if (currentOperator === undefined) {
+            if (firstValue.length === 14) {
+                return;
+            }
             firstValue.push(element.value);
             if (element.value === "." && displayScreen.textContent === "0" && typeof(firstValue) === "object" && secondValue.length < 2 && currentOperator === undefined) {
                 return displayScreen.textContent = "0.";
@@ -114,12 +139,15 @@ buttonsDigit.forEach((element) =>  {
                 displayScreen.textContent += element.value;
             }
         } if (currentOperator != undefined) {
+            if (secondValue.length === 14) {
+                return;
+            }
             secondValue.push(element.value);
             if (element.value === "." && currentOperator != undefined && result != 0 && secondValue.length === 1 && displayToNumber != displayScreen.textContent) {
                 return displayScreen.textContent = "0.";
             }
             if (element.value === "." && currentOperator != undefined && result === 0 && secondValue.length === 2) {
-                return displayScreen.textContent = "0.";
+               return displayScreen.textContent = "0.";
             }
             if (secondValue.length === 2 && typeof(firstValue) === "object") {
                 return displayScreen.textContent = element.value;
@@ -141,6 +169,10 @@ buttonsDigit.forEach((element) =>  {
 
 buttonsOperatorArray.forEach((element => {
     element.addEventListener("click", () => {
+        if (currentOperator === "÷" && typeof(firstValue) === "object" && secondValue.length === 1 || +displayScreen.textContent === 0) {
+            reset()
+            displayScreen.textContent = ":)";
+        }
         if (element.value === "clear" && element.value != "delete") {
             return reset();
         }
@@ -190,7 +222,11 @@ buttonsOperatorArray.forEach((element => {
             equals(firstValue, secondValue, currentOperator);
             secondValue = [];
             displayScreen.textContent = result;
-            // displayToNumber = +displayScreen.textContent;
+            for (let i = 0; i < limit.length; i++) {
+                if (limit[i].className == "limit") {
+                    limit[i].innerHTML = limit[i].innerHTML.substring(0,14)
+                }
+            }
         } else if (typeof(firstValue) === "number" && typeof(secondValue) === "object" && element.value != "delete") {
             secondValue = secondValue.join("");
             secondValue = parseFloat(secondValue);
@@ -198,7 +234,11 @@ buttonsOperatorArray.forEach((element => {
             currentOperator = element.value;
             secondValue = [];  
             displayScreen.textContent = result;
-            // displayToNumber = +displayScreen.textContent;
+            for (let i = 0; i < limit.length; i++) {
+                if (limit[i].className == "limit") {
+                    limit[i].innerHTML = limit[i].innerHTML.substring(0,14)
+                }
+            }
         }
     });
 }))
